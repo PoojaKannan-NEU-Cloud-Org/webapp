@@ -4,7 +4,6 @@ on:
   pull_request:
     branches:
       - main
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -16,5 +15,7 @@ jobs:
         with:
           node-version: '14'
       - name: Install dependencies
+      
         run: npm install && exit 0 || exit 1 
         # If npm install is successful, then it will exit 0, otherwise failure leads to exit 1
+
