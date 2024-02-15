@@ -24,30 +24,12 @@ sequelize.sync({ alter: true })
 // Use the userRoutes for the user endpoints
 app.use('/v1/user', userRoutes);
 
-
-=======
-// Supported Method - GET method
-app.get('/healthz', async (req, res) => {
-  if (Object.keys(req.query).length > 0 || Object.keys(req.body).length !== 0) {
-    return res.status(400).end();
-  }
-  try {
-    await sequelize.authenticate();
-    res.set('Cache-Control', 'no-store');
-    res.status(200).end(); 
-  } catch (error) {
-    res.status(503).end();
-  }
-});
-
-
 // Unsupported Method - POST, PUT, DELETE, PATCH, HEAD, OPTIONS
 const UnsupportedMethods = (req,res,next) => {
   if (req.method !== 'GET' ||req.method === 'HEAD' || req.method === 'OPTIONS')
   {
     return res.status(405).end();
   }
-
   // app.use('/healthz', UnsupportedMethods);
   // next();
   //  // Supported Method - GET method
@@ -66,15 +48,6 @@ const UnsupportedMethods = (req,res,next) => {
   // });
 };
 
-
-
-
-
-
-=======
-  next();
-};
-app.use('/healthz', UnsupportedMethods);
 
 
 // Handle 404 Not Found function
