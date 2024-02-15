@@ -6,5 +6,12 @@
     "express-basic-auth": "^1.2.1",
     "mysql2": "^3.9.1",
     "sequelize": "^6.36.0"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "supertest": "^6.3.4"
+  },
+  "scripts": {
+    "test": "jest"
   }
 }

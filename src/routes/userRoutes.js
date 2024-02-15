@@ -77,6 +77,7 @@ router.put('/self', authMiddleware, async (req, res) => {
 });
 
 
+
 // Route for getting user information
 router.get('/self', authMiddleware, async (req, res) => {
   try {
