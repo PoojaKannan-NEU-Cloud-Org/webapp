@@ -5,7 +5,7 @@ const userRoutes = require('./src/routes/userRoutes');
 
 const app = express();
 app.use(express.json());
-const port = process.env.PORT || 8080;
+const port = process.env.PORT || 4400;
 
 // Sync Sequelize models to the database
 sequelize.sync({ alter: true })
@@ -67,3 +67,5 @@ app.use((req, res) => {
 //     console.log(`Server running on http://localhost:${port}`);
 //   });
 // });
+
+module.exports = app;
