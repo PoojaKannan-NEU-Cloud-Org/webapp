@@ -61,8 +61,10 @@ router.put('/self', authMiddleware, async (req, res) => {
     }
     if (req.body.password && !(await bcrypt.compare(req.body.password, user.password))) {
       // Only update the password if it is different
-      const salt = await bcrypt.genSalt(10);
-      updatedFields.password = await bcrypt.hash(req.body.password, salt);
+
+      updatedFields.password = req.body.password;
+
+
     }
 
     await user.update(updatedFields);
