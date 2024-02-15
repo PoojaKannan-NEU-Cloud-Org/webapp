@@ -61,7 +61,9 @@ router.put('/self', authMiddleware, async (req, res) => {
     }
     if (req.body.password && !(await bcrypt.compare(req.body.password, user.password))) {
       // Only update the password if it is different
+
       updatedFields.password = req.body.password;
+
 
     }
 
