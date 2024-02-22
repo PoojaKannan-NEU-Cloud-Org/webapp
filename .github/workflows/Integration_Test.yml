@@ -1,22 +1,40 @@
-name: Integration Tests
+name: Integration_test
 
-on: [push, pull_request]
+on:
+  pull_request:
+    branches:
+      - main
+
 jobs:
-    test:
-      runs-on: ubuntu-latest  # Or self-hosted if you're using a self-hosted runner
-      steps:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
       - uses: actions/checkout@v2
+
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '21'
+          node-version: '14'
+
+      - name: Create .env file
+        run: |
+          echo "DB_HOST=${{ secrets.DB_HOST }}" >> .env
+          echo "DB_USER=${{ secrets.DB_USER }}" >> .env
+          echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
+          echo "DB_NAME=${{ secrets.DB_NAME }}" >> .env
+      - name: Install MySQL
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y mysql-server
+          sudo systemctl start mysql.service
+      - run: |
+          sudo /etc/init.d/mysql start
+          mysql -e 'CREATE DATABASE ${{ secrets.DB_NAME }};' -u${{ secrets.DB_USER }} -p"${{ secrets.DB_PASSWORD }}"
+          mysql -e 'SHOW DATABASES;' -u${{ secrets.DB_USER }} -p"${{ secrets.DB_PASSWORD }}"
+          
       - name: Install dependencies
         run: npm install
-      - name: Run integration tests
-        run: npm test
-        env:
-          DATABASE_HOST: ${{ secrets.DB_HOST }}
-          DATABASE_USER: ${{ secrets.DB_USER }}
-          DATABASE_PASSWORD: ${{ secrets.DB_PASSWORD }}
-          DATABASE_NAME: ${{ secrets.DB_NAME }}
-  
+
+      - name: Run Jest Tests
+        run: npm test --verbose
