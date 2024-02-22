@@ -6,18 +6,12 @@ on:
       - main
 
 jobs:
-
   packer-validate:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
-  
-
-
-
-      # Ensure this step aligns with your intentions for creating webapp.zip
       - name: Download webapp repository
         run: zip -r webapp.zip ./
 
@@ -29,14 +23,9 @@ jobs:
 
       - name: Check Packer Template Formatting
         run: packer fmt -check Infrastructure_template.pkr.hcl
-        # Checks the formatting of the specified Packer template file.
-
 
       - name: Initialize Packer
         run: packer init .
-        # Initializes the Packer configuration in the current directory, installing required plugins.
 
       - name: Validate Packer Template
         run: packer validate Infrastructure_template.pkr.hcl
-        # Validates the Packer template.
-
