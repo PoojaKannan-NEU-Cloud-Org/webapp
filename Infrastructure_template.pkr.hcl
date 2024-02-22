@@ -60,5 +60,6 @@ build {
       "sudo chown -R csye6225:csye6225 /home/user/*",
       "cd /home/user", # Replace {your_app_directory} with the actual directory name
       "sudo npm install"
+    ]
   }
 }
