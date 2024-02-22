@@ -2,7 +2,7 @@ packer {
   required_plugins {
     googlecompute = {
       source  = "github.com/hashicorp/googlecompute"
-      version = ">= 4.0.0"
+      version = ">= 1.0.0"
     }
   }
 }
@@ -18,18 +18,23 @@ variable "zone" {
 }
 
 source "googlecompute" "example" {
-  project_id       = var.project_id
-  zone             = var.zone
-  image_name       = "centos8-node-mysql-{{timestamp}}"
-  image_family     = "centos8-node-mysql"
-  source_image_family = "ccentos-stream-8"
-  ssh_username     = "centos"
-  machine_type     = "e2-medium"
-  disk_size        = 20
+  project_id          = var.project_id
+  zone                = var.zone
+  image_name          = "centos8-node-mysql-{{timestamp}}"
+  image_family        = "centos8-node-mysql"
+  source_image_family = "centos-stream-8"
+  ssh_username        = "centos"
+  machine_type        = "e2-medium"
+  disk_size           = 20
 }
 
 build {
   sources = ["source.googlecompute.example"]
+
+  provisioner "file" {
+    source      = "webapp.zip"
+    destination = "/tmp/webapp.zip"
+  }
 
   provisioner "shell" {
     inline = [
@@ -43,22 +48,18 @@ build {
       "sudo systemctl start mysqld",
       "sudo systemctl enable mysqld",
       "mysql --version",
-
-      
       # Creating the csye6225 group and user
       "sudo groupadd -r csye6225 || true",
       "sudo useradd -r -g csye6225 -s /usr/sbin/nologin csye6225 || true",
-      
       # Setting up the application directory and permissions
       "sudo mkdir -p /home/user",
       "sudo mv /tmp/webapp.zip /home/user/",
       "sudo chown -R csye6225:csye6225 /home/user",
-      
       # Unzipping and installing application dependencies
       "cd /home/user",
       "sudo unzip webapp.zip",
       "sudo chown -R csye6225:csye6225 /home/user/*",
-      "cd /home/user", # Replace {your_app_directory} with the actual directory name
+      "cd /home/user",
       "sudo npm install"
     ]
   }
