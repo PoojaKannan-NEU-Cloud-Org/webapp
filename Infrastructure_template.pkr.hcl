@@ -64,7 +64,7 @@ build {
       
        # Setting up the application directory and permissions
       "sudo mkdir -p /home/user",
-      "sudo mv /tmp/webapp.zip /home/user/"
+      "sudo mv /tmp/webapp.zip /home/user/",
       "sudo chown -R csye6225:csye6225 /home/user/*",
       
       #Instlling the necessary config files
@@ -86,7 +86,7 @@ build {
       "cd /home/user",
       "sudo unzip webapp.zip"
       "cd /home/user",
-      "sudo npm install"
+      "sudo npm install",
 
       "echo 'DB_HOST=${var.db_host}' > /home/user/.env",
       "echo 'DB_USER=${var.db_user}' >> //home/user/.env",
