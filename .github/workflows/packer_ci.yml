@@ -1,0 +1,42 @@
+name: packer_ci
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+
+  packer-validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+  
+
+
+
+      # Ensure this step aligns with your intentions for creating webapp.zip
+      - name: Download webapp repository
+        run: zip -r webapp.zip ./
+
+      - name: Setup Packer
+        run: |
+          curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
+          sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
+          sudo apt-get update && sudo apt-get install packer
+
+      - name: Check Packer Template Formatting
+        run: packer fmt -check Infrastructure_template.pkr.hcl
+        # Checks the formatting of the specified Packer template file.
+
+
+      - name: Initialize Packer
+        run: packer init .
+        # Initializes the Packer configuration in the current directory, installing required plugins.
+
+      - name: Validate Packer Template
+        run: packer validate Infrastructure_template.pkr.hcl
+        # Validates the Packer template.
+
