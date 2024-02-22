@@ -84,7 +84,7 @@ build {
     
        # Unzipping and installing application dependencies
       "cd /home/user",
-      "sudo unzip webapp.zip"
+      "sudo unzip webapp.zip",
       "cd /home/user",
       "sudo npm install",
 
