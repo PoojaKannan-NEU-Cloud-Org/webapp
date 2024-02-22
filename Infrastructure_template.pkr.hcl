@@ -82,9 +82,9 @@ build {
      # Installing unzip package
     "sudo yum install -y unzip",
     
-      # Unzipping and installing application dependencies
+       # Unzipping and installing application dependencies
       "cd /home/user",
-      "sudo unzip webapp.zip",
+      "sudo unzip webapp.zip"
       "cd /home/user",
       "sudo npm install"
 
