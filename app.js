@@ -54,6 +54,7 @@ const UnsupportedMethods = (req,res,next) => {
 app.use((req, res) => {
   if (req.accepts('json')) {
   res.status(404).end();
+  return "pooja"
   }
 });
 
@@ -65,3 +66,4 @@ app.use((req, res) => {
 // });
 
 module.exports = app;
+
