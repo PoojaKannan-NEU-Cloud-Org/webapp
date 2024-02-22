@@ -17,6 +17,26 @@ variable "zone" {
   default = "us-west1-c"
 }
 
+variable "db_host" {
+  type    = string
+  default = "localhost"
+}
+
+variable "db_user" {
+  type    = string
+  default = "root"
+}
+
+variable "db_pass" {
+  type    = string
+  default = "root"
+}
+
+variable "db_name" {
+  type    = string
+  default = "cloudcomputing"
+}
+
 source "googlecompute" "example" {
   project_id          = var.project_id
   zone                = var.zone
@@ -38,6 +58,16 @@ build {
 
   provisioner "shell" {
     inline = [
+       # Creating the csye6225 group and user
+      "sudo groupadd -r csye6225 || true",
+      "sudo useradd -r -g csye6225 -s /usr/sbin/nologin csye6225 || true",
+      
+       # Setting up the application directory and permissions
+      "sudo mkdir -p /home/user",
+      "sudo mv /tmp/webapp.zip /home/user/",
+      "sudo chown -R csye6225:csye6225 /home/user/*",
+      
+      #Instlling the necessary config files
       "sudo yum update -y",
       "sudo yum install -y curl",
       "curl -sL https://rpm.nodesource.com/setup_14.x | sudo bash -",
@@ -48,19 +78,20 @@ build {
       "sudo systemctl start mysqld",
       "sudo systemctl enable mysqld",
       "mysql --version",
-      # Creating the csye6225 group and user
-      "sudo groupadd -r csye6225 || true",
-      "sudo useradd -r -g csye6225 -s /usr/sbin/nologin csye6225 || true",
-      # Setting up the application directory and permissions
-      "sudo mkdir -p /home/user",
-      "sudo mv /tmp/webapp.zip /home/user/",
-      "sudo chown -R csye6225:csye6225 /home/user",
-      # Unzipping and installing application dependencies
+
+     # Installing unzip package
+    "sudo yum install -y unzip",
+    
+       # Unzipping and installing application dependencies
       "cd /home/user",
-      "sudo unzip webapp.zip",
-      "sudo chown -R csye6225:csye6225 /home/user/*",
+      "sudo unzip webapp.zip"
       "cd /home/user",
-      "sudo npm install"
+      "sudo npm install",
+
+      "echo 'DB_HOST=${var.db_host}' > /home/user/.env",
+      "echo 'DB_USER=${var.db_user}' >> //home/user/.env",
+      "echo 'DB_PASSWORD=${var.db_pass}' >> //home/user/.env",
+       "echo 'DB_NAME=${var.db_name}' >> //home/user/.env",
     ]
   }
 }
