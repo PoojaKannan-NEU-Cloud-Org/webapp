@@ -58,26 +58,32 @@ build {
 
   provisioner "shell" {
     inline = [
+     
        # Creating the csye6225 group and user
-      "sudo groupadd -r csye6225 || true",
-      "sudo useradd -r -g csye6225 -s /usr/sbin/nologin csye6225 || true",
+       "if [ ! -d /home/user ]; then sudo mkdir -p /home/user && echo 'Directory /home/user created successfully' || echo 'Failed to create directory /home/user'; else echo 'Directory /home/user already exists'; fi",
+    
+      "sudo groupadd -r csye6225",
+      "sudo useradd -r -g csye6225 -s /usr/sbin/nologin csye6225",
+      "sudo chown -R csye6225:csye6225 /home/user/",
+    
+
       
        # Setting up the application directory and permissions
-      "sudo mkdir -p /home/user",
-      "sudo mv /tmp/webapp.zip /home/user/",
-      "sudo chown -R csye6225:csye6225 /home/user/*",
       
+      "sudo mv /tmp/webapp.zip /home/user/",
+     
+
       #Instlling the necessary config files
-      "sudo yum update -y",
-      "sudo yum install -y curl",
-      "curl -sL https://rpm.nodesource.com/setup_14.x | sudo bash -",
-      "sudo yum install -y nodejs",
-      "node -v",
-      "npm -v",
-      "sudo yum install -y mysql-server",
-      "sudo systemctl start mysqld",
-      "sudo systemctl enable mysqld",
-      "mysql --version",
+       "sudo yum update -y",
+       "sudo yum install -y curl",
+       "curl -sL https://rpm.nodesource.com/setup_20.x | sudo bash -",
+       "sudo yum install -y nodejs",
+       "node -v",
+       "npm -v",
+       "sudo yum install -y mysql-server",
+       "sudo systemctl start mysqld",
+       "sudo systemctl enable mysqld",
+       "mysql --version",
 
      # Installing unzip package
     "sudo yum install -y unzip",
@@ -85,7 +91,7 @@ build {
        # Unzipping and installing application dependencies
       "cd /home/user",
       "sudo unzip webapp.zip",
-      "cd /home/user",
+      "cd /home/user/webapp",
       "sudo npm install",
 
       "echo 'DB_HOST=${var.db_host}' > /home/user/.env",
