@@ -25,7 +25,7 @@ jobs:
         run: packer fmt Infrastructure_template.pkr.hcl
 
       - name: Initialize Packer
-        run: packer init
+        run: packer init Infrastructure_template.pkr.hcl
 
       - name: Validate Packer Template
         run: packer validate Infrastructure_template.pkr.hcl
