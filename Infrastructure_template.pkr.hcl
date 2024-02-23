@@ -74,29 +74,28 @@ build {
 
 
       #Instlling the necessary config files
-       "sudo yum update -y",
-       "sudo yum install -y curl",
-       "curl -sL https://rpm.nodesource.com/setup_20.x | sudo bash -",
-       "sudo yum install -y nodejs",
-       "node -v",
-       "npm -v",
-       "sudo yum install -y mysql-server",
-       "sudo systemctl start mysqld",
-       "sudo systemctl enable mysqld",
-       "mysql --version",
+      "sudo yum update -y",
+      "sudo yum install -y curl",
+      "curl -sL https://rpm.nodesource.com/setup_20.x | sudo bash -",
+      "sudo yum install -y nodejs",
+      "node -v",
+      "npm -v",
+      "sudo yum install -y mysql-server",
+      "sudo systemctl start mysqld",
+      "sudo systemctl enable mysqld",
+      "mysql --version",
 
-     # Installing unzip package
-    "sudo yum install -y unzip",
-    
-       # Unzipping and installing application dependencies
-       "cd /home/user",
+      # Installing unzip package
+      "sudo yum install -y unzip",
+
+      # Unzipping and installing application dependencies
+      "cd /home/user",
       "sudo unzip webapp.zip",
 
       # Assuming package.json is directly inside the unzipped content
-      "cd $(find . -name 'package.json' -exec dirname {} \\; | head -n 1) && sudo npm install",
+      "sudo npm install",
 
       # Assuming package.json is directly inside the unzipped content
-      "cd $(find . -name 'package.json' -exec dirname {} \\; | head -n 1) && sudo npm install",
       "echo 'DB_HOST=${var.db_host}' | sudo tee /home/user/.env > /dev/null",
       "echo 'DB_USER=${var.db_user}' | sudo tee -a /home/user/.env > /dev/null",
       "echo 'DB_PASSWORD=${var.db_pass}' | sudo tee -a /home/user/.env > /dev/null",
