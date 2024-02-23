@@ -58,20 +58,20 @@ build {
 
   provisioner "shell" {
     inline = [
-     
-       # Creating the csye6225 group and user
-       "if [ ! -d /home/user ]; then sudo mkdir -p /home/user && echo 'Directory /home/user created successfully' || echo 'Failed to create directory /home/user'; else echo 'Directory /home/user already exists'; fi",
-    
+
+      # Creating the csye6225 group and user
+      "if [ ! -d /home/user ]; then sudo mkdir -p /home/user && echo 'Directory /home/user created successfully' || echo 'Failed to create directory /home/user'; else echo 'Directory /home/user already exists'; fi",
+
       "sudo groupadd -r csye6225",
       "sudo useradd -r -g csye6225 -s /usr/sbin/nologin csye6225",
       "sudo chown -R csye6225:csye6225 /home/user/",
-    
 
-      
-       # Setting up the application directory and permissions
-      
+
+
+      # Setting up the application directory and permissions
+
       "sudo mv /tmp/webapp.zip /home/user/",
-     
+
 
       #Instlling the necessary config files
        "sudo yum update -y",
@@ -95,10 +95,12 @@ build {
       # Assuming package.json is directly inside the unzipped content
       "cd $(find . -name 'package.json' -exec dirname {} \\; | head -n 1) && sudo npm install",
 
-      "echo 'DB_HOST=${var.db_host}' > /home/user/.env",
-      "echo 'DB_USER=${var.db_user}' >> //home/user/.env",
-      "echo 'DB_PASSWORD=${var.db_pass}' >> //home/user/.env",
-       "echo 'DB_NAME=${var.db_name}' >> //home/user/.env",
+      # Assuming package.json is directly inside the unzipped content
+      "cd $(find . -name 'package.json' -exec dirname {} \\; | head -n 1) && sudo npm install",
+      "echo 'DB_HOST=${var.db_host}' | sudo tee /home/user/.env > /dev/null",
+      "echo 'DB_USER=${var.db_user}' | sudo tee -a /home/user/.env > /dev/null",
+      "echo 'DB_PASSWORD=${var.db_pass}' | sudo tee -a /home/user/.env > /dev/null",
+      "echo 'DB_NAME=${var.db_name}' | sudo tee -a /home/user/.env > /dev/null"
     ]
   }
 }
