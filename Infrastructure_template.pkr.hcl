@@ -89,10 +89,11 @@ build {
     "sudo yum install -y unzip",
     
        # Unzipping and installing application dependencies
-      "cd /home/user",
+       "cd /home/user",
       "sudo unzip webapp.zip",
-      "cd /home/user/webapp",
-      "sudo npm install",
+
+      # Assuming package.json is directly inside the unzipped content
+      "cd $(find . -name 'package.json' -exec dirname {} \\; | head -n 1) && sudo npm install",
 
       "echo 'DB_HOST=${var.db_host}' > /home/user/.env",
       "echo 'DB_USER=${var.db_user}' >> //home/user/.env",
