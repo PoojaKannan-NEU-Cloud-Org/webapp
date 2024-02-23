@@ -7,7 +7,7 @@ EnvironmentFile=/etc/environment
 WorkingDirectory=/tmp
 Type=simple
 
-ExecStart=/usr/bin/node /home/user/app.js
+ExecStart=/usr/bin/node /home/user/webapp/app.js
 
 
 Restart=always
