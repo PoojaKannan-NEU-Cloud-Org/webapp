@@ -2,11 +2,12 @@ name: Integration_test
 
 on:
   pull_request:
-    branches:
-      - main
+    types:
+      - closed
 
 jobs:
-  build-and-test:
+  if_merged:
+    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
 
     steps:
@@ -23,6 +24,27 @@ jobs:
           echo "DB_USER=${{ secrets.DB_USER }}" >> .env
           echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
           echo "DB_NAME=${{ secrets.DB_NAME }}" >> .env
+      
+      - name: Create application.service file
+        run: |
+         echo "[Unit]
+         Description=My Node.js Web Application
+         After=network.target
+
+         [Service]
+         Type=simple
+         WorkingDirectory=/home/user/
+         Restart=on-failure
+         User=csye6225
+         Environment='DB_HOST=\${{ secrets.DB_HOST }}'
+         Environment='DB_USER=\${{ secrets.DB_USER }}'
+         Environment='DB_PASSWORD=\${{ secrets.DB_PASSWORD }}'
+         Environment='DB_NAME=\${{ secrets.DB_NAME }}'
+         ExecStart=/usr/bin/node /home/user/app.js
+
+         [Install]
+         WantedBy=multi-user.target"
+         
       - name: Install MySQL
         run: |
           sudo apt-get update
@@ -38,3 +60,26 @@ jobs:
 
       - name: Run Jest Tests
         run: npm test --verbose
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v0.2.0 # Updated to use a specific version; check for the latest version
+        with:
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+          service_account_key: ${{ secrets.GCP_SA_KEY }}
+          export_default_credentials: true
+
+      - name: Zip the project directory
+        run: zip -r webapp.zip ./
+
+      - name: Install Packer
+        run: |
+          curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
+          sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
+          sudo apt-get update && sudo apt-get install packer
+
+
+      - name: Initialize Packer
+        run: packer init Infrastructure_template.pkr.hcl
+
+      - name: Build the GCP image with Packer
+        run: packer build Infrastructure_template.pkr.hcl
