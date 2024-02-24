@@ -110,7 +110,8 @@ build {
       "echo 'DB_NAME=${var.db_name}' | sudo tee -a /home/user/.env > /dev/null",
 
       #Systemd commands to start the web application
-      
+
+      "sudo mv /tmp/application.service /etc/systemd/system/",
       "sudo systemctl daemon-reload",
       "sudo systemctl enable application.service",
       "sudo systemctl start application.service",
