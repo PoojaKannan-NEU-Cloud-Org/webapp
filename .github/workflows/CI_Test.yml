@@ -14,9 +14,26 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v1
         with:
-
           node-version: '21'
       - name: Install dependencies
         run: npm install 
       - name: Exit with status code 0
         run: exit 0
+    
+      - name: Download webapp repository
+        run: zip -r webapp.zip ./
+
+      - name: Setup Packer
+        run: |
+          curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
+          sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
+          sudo apt-get update && sudo apt-get install packer
+
+      - name: Check Packer Template Formatting
+        run: packer fmt Infrastructure_template.pkr.hcl
+
+      - name: Initialize Packer
+        run: packer init Infrastructure_template.pkr.hcl
+
+      - name: Validate Packer Template
+        run: packer validate Infrastructure_template.pkr.hcl

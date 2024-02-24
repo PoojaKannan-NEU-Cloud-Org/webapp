@@ -29,18 +29,18 @@ variable "db_user" {
 
 variable "db_pass" {
   type    = string
-  default = "root"
+  default = "Reset@123"
 }
 
 variable "db_name" {
   type    = string
-  default = "cloudcomputing"
+  default = "cloud_computing"
 }
 
 source "googlecompute" "example" {
   project_id          = var.project_id
   zone                = var.zone
-  image_name          = "centos8-node-mysql-{{timestamp}}"
+  image_name          = "customimagecloud-{{timestamp}}"
   image_family        = "centos8-node-mysql"
   source_image_family = "centos-stream-8"
   ssh_username        = "centos"
@@ -56,6 +56,11 @@ build {
     destination = "/tmp/webapp.zip"
   }
 
+  provisioner "file" {
+    source      = "application.service"
+    destination = "/tmp/application.service"
+  }
+
   provisioner "shell" {
     inline = [
 
@@ -65,13 +70,9 @@ build {
       "sudo groupadd -r csye6225",
       "sudo useradd -r -g csye6225 -s /usr/sbin/nologin csye6225",
       "sudo chown -R csye6225:csye6225 /home/user/",
-
-
-
+      
       # Setting up the application directory and permissions
-
       "sudo mv /tmp/webapp.zip /home/user/",
-
 
       #Instlling the necessary config files
       "sudo yum update -y",
@@ -84,7 +85,13 @@ build {
       "sudo systemctl start mysqld",
       "sudo systemctl enable mysqld",
       "mysql --version",
-
+      "sudo mysql -u root <<'EOF'",
+        "ALTER USER 'root'@'localhost' IDENTIFIED BY '${var.db_pass}';",
+        "CREATE DATABASE `${var.db_name}`;",
+        "exit",
+        "EOF",
+      
+      
       # Installing unzip package
       "sudo yum install -y unzip",
 
@@ -93,13 +100,22 @@ build {
       "sudo unzip webapp.zip",
 
       # Assuming package.json is directly inside the unzipped content
+      "cd /home/user/",
       "sudo npm install",
 
       # Assuming package.json is directly inside the unzipped content
       "echo 'DB_HOST=${var.db_host}' | sudo tee /home/user/.env > /dev/null",
       "echo 'DB_USER=${var.db_user}' | sudo tee -a /home/user/.env > /dev/null",
       "echo 'DB_PASSWORD=${var.db_pass}' | sudo tee -a /home/user/.env > /dev/null",
-      "echo 'DB_NAME=${var.db_name}' | sudo tee -a /home/user/.env > /dev/null"
+      "echo 'DB_NAME=${var.db_name}' | sudo tee -a /home/user/.env > /dev/null",
+
+      #Systemd commands to start the web application
+      
+      "sudo systemctl daemon-reload",
+      "sudo systemctl enable application.service",
+      "sudo systemctl start application.service",
+      "sudo systemctl status application.service",
+      
     ]
   }
 }
