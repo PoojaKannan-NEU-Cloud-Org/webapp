@@ -7,7 +7,7 @@ packer {
   }
 }
 
-variable "project_id"   {
+variable "project_id" {
   type    = string
   default = "devtesting-415014"
 }
@@ -38,7 +38,7 @@ variable "db_name" {
 }
 
 source "googlecompute" "example" {
-  project_id          = var.project_id
+  project_id          = var.project_i
   zone                = var.zone
   image_name          = "customimagecloud-{{timestamp}}"
   image_family        = "centos8-node-mysql"
