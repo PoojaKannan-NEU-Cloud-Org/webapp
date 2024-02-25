@@ -7,7 +7,7 @@ packer {
   }
 }
 
-variable "project_id" {
+variable "project_id"   {
   type    = string
   default = "devtesting-415014"
 }
