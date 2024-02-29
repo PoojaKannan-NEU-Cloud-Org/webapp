@@ -52,7 +52,7 @@ build {
       "sudo yum install -y unzip",
       # Unzipping and installing application dependencies
       "cd /home/webapp",
-      "sudo unzip webbapp.zip",
+      "sudo unzip webapp.zip",
       # installing npm 
       "cd /home/webapp",
       "sudo npm install",
