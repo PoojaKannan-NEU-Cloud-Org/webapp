@@ -18,7 +18,6 @@ source "googlecompute" "example" {
   project_id          = var.project_id
   zone                = var.zone
   image_name          = "updatingpackerfile-{{timestamp}}"
-  credentials_file    = "devtesting-415014-a693db63374f.json"
   image_family        = "centos8-node-mysql"
   source_image_family = "centos-stream-8"
   ssh_username        = "centos"
