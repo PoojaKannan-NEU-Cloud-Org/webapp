@@ -40,7 +40,7 @@ build {
       "sudo groupadd -r csye6225",
       "sudo useradd -r -g csye6225 -s /usr/sbin/nologin csye6225",
       # Setting up the application directory and permissions
-      "sudo mv /tmp/webbapp.zip /home/webapp",
+      "sudo mv /tmp/webapp.zip /home/webapp",
       #Instlling the necessary config files
       "sudo yum update -y",
       "sudo yum install -y curl",
