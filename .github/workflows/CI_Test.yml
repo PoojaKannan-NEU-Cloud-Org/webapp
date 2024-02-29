@@ -30,7 +30,7 @@ jobs:
           sudo apt-get update && sudo apt-get install packer
 
       - name: Check Packer Template Formatting
-        run: packer fmt Infrastructure_template.pkr.hcl
+        run: packer fmt -check Infrastructure_template.pkr.hcl
 
       - name: Initialize Packer
         run: packer init Infrastructure_template.pkr.hcl
