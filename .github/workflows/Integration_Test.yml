@@ -24,26 +24,6 @@ jobs:
           echo "DB_USER=${{ secrets.DB_USER }}" >> .env
           echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
           echo "DB_NAME=${{ secrets.DB_NAME }}" >> .env
-      
-      - name: Create application.service file
-        run: |
-         echo "[Unit]
-         Description=My Node.js Web Application
-         After=network.target
-
-         [Service]
-         Type=simple
-         WorkingDirectory=/home/user/
-         Restart=on-failure
-         User=csye6225
-         Environment='DB_HOST=\${{ secrets.DB_HOST }}'
-         Environment='DB_USER=\${{ secrets.DB_USER }}'
-         Environment='DB_PASSWORD=\${{ secrets.DB_PASSWORD }}'
-         Environment='DB_NAME=\${{ secrets.DB_NAME }}'
-         ExecStart=/usr/bin/node /home/user/app.js
-
-         [Install]
-         WantedBy=multi-user.target"
          
       - name: Install MySQL
         run: |
