@@ -17,7 +17,7 @@ variable "zone" {
 source "googlecompute" "example" {
   project_id          = var.project_id
   zone                = var.zone
-  image_name          = "updatingpackerfile-{{timestamp}}"
+  image_name          = "demo-ops-agentfile-{{timestamp}}"
   image_family        = "centos8-node-mysql"
   source_image_family = "centos-stream-8"
   ssh_username        = "centos"
@@ -48,6 +48,38 @@ build {
       "sudo yum install -y nodejs",
       "node -v",
       "npm -v",
+      # Installing Google ops agent 
+      "curl -sSO https://dl.google.com/cloudagents/add-google-cloud-ops-agent-repo.sh",
+      "sudo bash add-google-cloud-ops-agent-repo.sh --also-install",
+      # Creating the config.yaml for Google Cloud Ops Agent
+      "sudo bash -c 'cat <<EOF > /etc/google-cloud-ops-agent/config.yaml",
+      "logging:",
+      "  receivers:",
+      "    my-app-receiver:",
+      "      type: files",
+      "      include_paths:",
+      "        - /var/log/csye6225/myapp.log",
+      "      record_log_file_path: true",
+      "  processors:",
+      "    my-app-processor:",
+      "      type: parse_json",
+      "      time_key: time",
+      "      time_format: \"%Y-%m-%dT%H:%M:%S.%L\"",
+      "    move_severity:",
+      "      type: modify_fields",
+      "      fields:",
+      "        severity:",
+      "          move_from: jsonPayload.severity",
+      "  service:",
+      "    pipelines:",
+      "      default_pipeline:",
+      "        receivers: [my-app-receiver]",
+      "        processors: [my-app-processor, move_severity]",
+      "EOF'",
+
+
+      "sudo systemctl enable google-cloud-ops-agent",
+      "sudo systemctl start google-cloud-ops-agent",
       # Installing unzip package
       "sudo yum install -y unzip",
       # Unzipping and installing application dependencies
@@ -58,7 +90,11 @@ build {
       "sudo npm install",
       # Giving permissions for the webapp folder
       "sudo chown -R csye6225:csye6225 /home/webapp",
-      "sudo chmod 750 -R /home/webapp"
+      "sudo chmod 750 -R /home/webapp",
+      # Giving permissions for the log file
+      "sudo mkdir /var/log/csye6225",
+      "sudo chown -R csye6225:csye6225 /var/log/csye6225",
+      "sudo chmod 750 -R  /var/log/csye6225"
     ]
   }
 }
