@@ -1,12 +1,15 @@
 {
   "name": "webapp_cloud_forked",
-  "version":"1.0.0",
+  "version": "1.0.0",
   "dependencies": {
     "bcrypt": "^5.1.1",
     "dotenv": "^16.4.1",
     "express": "^4.18.2",
     "express-basic-auth": "^1.2.1",
     "mysql2": "^3.9.1",
+    "node-json-logger": "^0.2.1",
+    "pino": "^8.19.0",
+    "pino-pretty": "^10.3.1",
     "sequelize": "^6.36.0"
   },
   "devDependencies": {
