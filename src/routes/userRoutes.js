@@ -3,7 +3,7 @@ const User = require('../models/user');
 const bcrypt = require('bcrypt');
 const router = express.Router();
 const authMiddleware = require('../middleware/authMiddleware');
-const logger = require('../logger');
+ const logger = require('../logger');
 
 // Helper function to remove password from the user object before sending the response
 function getUserDataWithoutPassword(user) {
@@ -17,7 +17,7 @@ router.post('/', async (req, res) => {
     // Check if user with provided email already exists
     const existingUser = await User.findOne({ where: { username: req.body.username } });
     if (existingUser) {
-      logger.warn('user exists');
+       logger.warn('user exists');
       return res.status(400).end();
       
       
@@ -59,7 +59,7 @@ router.put('/self', authMiddleware, async (req, res) => {
         user.last_name === req.body.last_name &&
         await bcrypt.compare(req.body.password, user.password)) {
       // If content is unchanged, return a 400 Bad Request
-      logger.error('400 bad request');
+       logger.error('400 bad request');
       return res.status(400).end();
       
     }
@@ -90,7 +90,7 @@ router.put('/self', authMiddleware, async (req, res) => {
   } catch (error) {
    
     res.status(500).end();
-    logger.error('500 internal server error');
+     logger.error('500 internal server error');
   }
 });
 
