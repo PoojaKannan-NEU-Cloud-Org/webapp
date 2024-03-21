@@ -42,8 +42,6 @@ app.use('/healthz', UnsupportedMethods);
 app.get('/healthz', async (req, res) => {
   if (Object.keys(req.query).length > 0 || Object.keys(req.body).length !== 0) {
     logger.error("400 bad request") ;
-    // var a=null;
-    // console.log(a.abcd);
     return res.status(400).end();
    // Bad Request if there are query parameters or body
   }
