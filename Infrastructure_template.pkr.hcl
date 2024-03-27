@@ -17,7 +17,7 @@ variable "zone" {
 source "googlecompute" "example" {
   project_id          = var.project_id
   zone                = var.zone
-  image_name          = "demo-ops-agentfile-{{timestamp}}"
+  image_name          = "cloud-serverless-function-{{timestamp}}"
   image_family        = "centos8-node-mysql"
   source_image_family = "centos-stream-8"
   ssh_username        = "centos"

@@ -1,6 +1,7 @@
 require('dotenv').config();
 const request = require('supertest');
 const app = require('../app.js'); // Assuming your app is defined in app.js
+const EmailTracking = require('../src/models/email_tracking.js');
 
 const username = process.env.DB_USER;
 const password = process.env.DB_PASSWORD;
@@ -12,7 +13,7 @@ global.BASE64_ENCODED_AUTH_STRING = base64AuthString;
 
 // Outside of your individual test cases but inside the describe block
 let userCredentials = null;
-
+jest.setTimeout(60000); 
 describe('User routes integration tests', () => {
     // Test Case 1 ///
   it('should create a new account and validate it exists', async () => {
@@ -29,13 +30,22 @@ describe('User routes integration tests', () => {
       .send(userData);
 
     expect(createResponse.status).toBe(201);
+    
+   const emailTracking = await EmailTracking.findOne({
+    where: { username: userData.username }});
+    const verifyResponse = await request(app)
+    .get(`/v1/user/verify?token=${emailTracking.verification_token}`);
+    expect(verifyResponse.status).toBe(200);
+
+  
+
 
     // Set user credentials to be used in the next test
     userCredentials = {
       username: userData.username,
       password: userData.password,
     };
-
+     
     // Make a GET request to validate the new user
     const getAuthString = Buffer.from(`${userData.username}:${userData.password}`).toString('base64');
 
