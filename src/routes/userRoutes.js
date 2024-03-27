@@ -29,8 +29,8 @@ async function publishMessage(userData, topicName) {
       console.log(`Message ${messageId} published.`);
       return messageId;
     } catch(error) {
-      console.error('Error publishing message:', error);
-      throw error;
+     console.error('Error publishing message:', error);
+     throw error;
     }
 }
 //Token generation
@@ -113,10 +113,12 @@ router.post('/', async (req, res) => {
         //   last_name: req.body.last_name,
         // });
         const newVerificationToken = generateToken(16);
+        try{
         await publishMessage({
           email: existingUser.username, // Assuming email is the username
           verificationToken: newVerificationToken,
-        }, 'verify_email');
+        }, 'verify_email');}
+        catch(error){}
 
         // Optionally, update the user record with the new verification token
         await emailTracking.update({ verification_token: newVerificationToken });
@@ -136,10 +138,12 @@ router.post('/', async (req, res) => {
     });
 
     // Publish message for email verification
+    try{
     await publishMessage({
       email: newUser.username,
       verificationToken: verificationToken,
-    }, 'verify_email');
+    }, 'verify_email');}
+    catch(error){}
 
     // Track the email sent in EmailTracking table
 
