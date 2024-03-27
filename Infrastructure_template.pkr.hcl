@@ -8,7 +8,7 @@ packer {
 }
 variable "project_id" {
   type    = string
-  default = "devtesting-415014"
+  default = "dev-imageterraform-testing"
 }
 variable "zone" {
   type    = string
