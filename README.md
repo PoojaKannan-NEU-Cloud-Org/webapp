@@ -21,6 +21,18 @@ This repository contains the source code and deployment configurations for deplo
 - Updated the Packer custom image to include connections to a Cloud SQL instance for the web application.
 - Leveraged Terraform to create VM instances on GCP, integrating a startup script to launch the web application.
 
+### Assignment_06 : DNS Setup details
+
+This assignment involved the setup of a DNS system, which included the creation of a public zone and configuration of Nameservers through the DNS registrar. Additionally, Terraform was utilized to create an A record, and endpoints were established for `/healthz` and `/v1`, accessible via [http://poojacloud24.pw:8080](http://poojacloud24.pw:8080).
+
+Moreover, modifications were made to a Packer configuration. Specifically, the `google-agent-ops` was installed, and logging was configured to direct logs from `/var/logs/app.log` to the Google Cloud Platform (GCP) console log explorer.
+
+### Assignment_07 : Serverless and cloud functions
+In Assignment #07, the focus was on setting up a Pub/Sub system and Cloud Function using Terraform. This involved creating the necessary infrastructure to establish communication between Pub/Sub, Cloud Function, MySQL instances, and the web application.
+
+The primary functionality implemented was related to user registration. Upon registration via a POST method, an email verification link is dispatched to the user utilizing Pub/Sub and Cloud Function. If the user fails to verify their email, they are restricted from updating or accessing their user details within the application.
+
+
 ## Directory Structure
 
 - `/app`: Contains the source code of the web application.
