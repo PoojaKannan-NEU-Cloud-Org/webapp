@@ -32,6 +32,8 @@ In Assignment #07, the focus was on setting up a Pub/Sub system and Cloud Functi
 
 The primary functionality implemented was related to user registration. Upon registration via a POST method, an email verification link is dispatched to the user utilizing Pub/Sub and Cloud Function. If the user fails to verify their email, they are restricted from updating or accessing their user details within the application.
 
+## Assignment_08
+There is no changes on web application
 
 ## Directory Structure
 
@@ -40,5 +42,4 @@ The primary functionality implemented was related to user registration. Upon reg
 - `/terraform`: Contains Terraform configurations for provisioning VM instances on GCP and associated resources.(seperate repo)
 - `/tests`: Includes integration tests for the web application.
 
-##testing purpose
 
