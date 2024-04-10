@@ -37,3 +37,36 @@ jobs:
 
       - name: Validate Packer Template
         run: packer validate Infrastructure_template.pkr.hcl
+      
+      - name: Build the GCP image with Packer
+        run: | 
+          IMAGE_CUSTOM=$(packer build -machine-readable Infrastructure_template.pkr.hcl  | grep -m 1 "A disk image was created" | awk '{print $NF}')
+          echo "CUSTOM_NAME=$IMAGE_CUSTOM" >> $GITHUB_ENV
+
+      - name: Get the source_name details
+        run: |
+          read -r name zone <<< $(gcloud compute instance-groups managed list-instances ${{ secrets.IG_NAME }} --region=${{ secrets.Region }} | awk '/HEALTHY/{print $1, $2; exit}')
+          echo "SOURCE_INSTANCE_NAME=$name" >> $GITHUB_ENV
+          echo "ZONE=$zone" >> $GITHUB_ENV
+
+      - name: Recreate instance template
+        run: |
+              echo "TEMPLATE_NAME=$(gcloud compute instance-templates create "${{ secrets.Vm_Template }}-$(date +%s)" \
+              --source-instance=${{ env.source_name }} \
+              --source-instance-zone=${{ env.ZONE }} \
+              --instance-template-region=${{ secrets.Region }} \
+              --image=${{ env.source_name_IMAGE }} | awk 'NR==2{print $1}')" >> $GITHUB_ENV
+
+      - name: Update Managed Instance Group with New Template
+        run: |
+              gcloud compute instance-groups managed set-instance-template ${{ secrets.IG_NAME }} \
+              --template=projects/${{ secrets.Project_Id }}/regions/${{ secrets.Region }}/instanceTemplates/${{ env.TEMPLATE_NAME }} \
+              --region=${{ secrets.REGION }}
+              
+      - name: Rolling start update
+        run: |
+               gcloud compute instance-groups managed rolling-action start-update ${{ secrets.IG_NAME }} \
+               --version=template=projects/${{ secrets.Project_Id }}/regions/${{ secrets.Region }}/instanceTemplates/${{ env.TEMPLATE_NAME }} \
+               --region=${{ secrets.Region }}
+      - name: Update status check
+        run: gcloud compute instance-groups managed wait-until ${{ secrets.IG_NAME }} --version-target-reached --region=${{ secrets.Region }}
