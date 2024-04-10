@@ -35,6 +35,23 @@ The primary functionality implemented was related to user registration. Upon reg
 ## Assignment_08
 There is no changes on web application
 
+## Assignment_09
+Enhanced Integration Test Workflow:
+
+Updated integration test workflow to support CI/CD testing.
+Ensured thorough testing of application changes before deployment.
+Manual Creation of VM Instance Templates:
+
+Created VM instance templates manually via the GCP console.
+Templates serve as predefined configurations for launching virtual machine instances.
+Introduction of New Endpoint:
+
+Added a new endpoint to the application for testing updates.
+Facilitates validation of changes and integration with existing functionality.
+Purpose of Updates:
+
+Establishment of a robust CI/CD pipeline for the application.
+Optimization of development and deployment processes for efficiency and reliability.
 ## Directory Structure
 
 - `/app`: Contains the source code of the web application.
