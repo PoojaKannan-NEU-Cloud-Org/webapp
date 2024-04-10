@@ -55,6 +55,16 @@ app.get('/healthz', async (req, res) => {
     res.status(503).end(); 
   }
 });
+app.get('/newendpoint', (req, res) => {
+  res.status(200).end();
+  logger.info("200 ok response successful");
+});
+
+// Define the GET /newendpoint endpoint
+app.get('/newendpoint', (req, res) => {
+  res.status(200).end();
+  logger.info("200 ok response successful");
+});
 
 // Handle 404 Not Found function
 app.use((req, res) => {
@@ -64,6 +74,7 @@ app.use((req, res) => {
 
   }
 });
+
 
 module.exports = app;
 
