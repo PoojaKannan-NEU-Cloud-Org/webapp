@@ -47,8 +47,8 @@ jobs:
       
       - name: Build the GCP image with Packer
         run: | 
-          IMAGE_CUSTOM=$(packer build -machine-readable Infrastructure_template.pkr.hcl  | grep -m 1 "A disk image was created" | awk '{print $NF}')
-          echo "CUSTOM_NAME=$IMAGE_CUSTOM" >> $GITHUB_ENV
+          # IMAGE_CUSTOM=$(packer build -machine-readable Infrastructure_template.pkr.hcl  | grep -m 1 "A disk image was created" | awk '{print $NF}')
+          echo "CUSTOM_NAME=cloud-serverless-function-1712734597" >> $GITHUB_ENV
 
       - name: Get the source_name details
         run: |
@@ -59,10 +59,10 @@ jobs:
       - name: Recreate instance template
         run: |
               echo "TEMPLATE_NAME=$(gcloud compute instance-templates create "${{ secrets.Vm_Template }}-$(date +%s)" \
-              --source-instance=${{ env.source_name }} \
+              --source-instance=${{ env.SOURCE_INSTANCE_NAME }} \
               --source-instance-zone=${{ env.ZONE }} \
               --instance-template-region=${{ secrets.Region }} \
-              --image=${{ env.source_name_IMAGE }} | awk 'NR==2{print $1}')" >> $GITHUB_ENV
+              --configure-disk=instantiate-from=custom-image,custom-image=projects/${{ secrets.Project_Id}}/global/images/${{ env.CUSTOM_NAME}},auto-delete=true | awk 'NR==2{print $1}')" >> $GITHUB_ENV
 
       - name: Update Managed Instance Group with New Template
         run: |
