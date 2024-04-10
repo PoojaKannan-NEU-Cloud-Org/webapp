@@ -62,7 +62,7 @@ jobs:
               --source-instance=${{ env.SOURCE_INSTANCE_NAME }} \
               --source-instance-zone=${{ env.ZONE }} \
               --instance-template-region=${{ secrets.Region }} \
-              --configure-disk=instantiate-from=custom-image,custom-image=projects/${{ secrets.Project_Id}}/global/images/${{ env.CUSTOM_NAME}},auto-delete=true | awk 'NR==2{print $1}')" >> $GITHUB_ENV
+              --configure-disk=device-name=persistent-disk-0,instantiate-from=custom-image,custom-image=projects/${{ secrets.Project_Id}}/global/images/${{ env.CUSTOM_NAME}},auto-delete=true | awk 'NR==2{print $1}')" >> $GITHUB_ENV
 
       - name: Update Managed Instance Group with New Template
         run: |
