@@ -26,7 +26,7 @@ describe('User routes integration tests', () => {
 
     // Make a POST request to create a new user
     const createResponse = await request(app)
-      .post('/v1/user')
+      .post('/v2/user')
       .send(userData);
 
     expect(createResponse.status).toBe(201);
@@ -34,7 +34,7 @@ describe('User routes integration tests', () => {
    const emailTracking = await EmailTracking.findOne({
     where: { username: userData.username }});
     const verifyResponse = await request(app)
-    .get(`/v1/user/verify?token=${emailTracking.verification_token}`);
+    .get(`/v2/user/verify?token=${emailTracking.verification_token}`);
     expect(verifyResponse.status).toBe(200);
 
   
@@ -50,7 +50,7 @@ describe('User routes integration tests', () => {
     const getAuthString = Buffer.from(`${userData.username}:${userData.password}`).toString('base64');
 
     const getResponse = await request(app)
-      .get('/v1/user/self')
+      .get('/v2/user/self')
       .set('Authorization', `Basic ${getAuthString}`);
 
     expect(getResponse.status).toBe(200);
@@ -79,7 +79,7 @@ describe('User routes integration tests', () => {
 
     // Make a PUT request to update the user
     const response = await request(app)
-      .put('/v1/user/self')
+      .put('/v2/user/self')
       .set('Authorization', `Basic ${updateAuthString}`)
       .send(updatedUserData);
 
@@ -99,7 +99,7 @@ describe('User routes integration tests', () => {
 
 // After update, make a GET request to validate the updated user
 const getUpdatedResponse = await request(app)
-  .get('/v1/user/self')
+  .get('/v2/user/self')
   .set('Authorization', `Basic ${newUpdateAuthString}`);
 
 expect(getUpdatedResponse.status).toBe(200);

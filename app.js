@@ -24,7 +24,7 @@ sequelize.sync({ alter: true })
   });
 
 // Use the userRoutes for the user endpoints
-app.use('/v1/user', userRoutes);
+app.use('/v2/user', userRoutes);
 
 const UnsupportedMethods = (req, res, next) => {
   if (req.method !== 'GET') { // Deny anything that's not a GET request
