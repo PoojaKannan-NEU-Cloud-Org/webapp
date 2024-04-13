@@ -162,7 +162,7 @@ router.post('/', async (req, res) => {
   }
 });
 
-// Middleware to check if user is verified before allowing access to '/v1/self'
+// Middleware to check if user is verified before allowing access to '/v2/self'
 const checkVerification = async (req, res, next) => {
   try {
     // Assuming the email is attached to the request by the auth middleware
